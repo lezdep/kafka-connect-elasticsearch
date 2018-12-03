@@ -39,6 +39,7 @@ import io.searchbox.indices.CreateIndex;
 import io.searchbox.indices.IndicesExists;
 import io.searchbox.indices.mapping.GetMapping;
 import io.searchbox.indices.mapping.PutMapping;
+import io.searchbox.client.config.ElasticsearchVersion;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -168,7 +169,7 @@ public class JestElasticsearchClientTest {
       @Override
       public boolean matches(CreateIndex createIndex) {
         // check the URI as the equals method on CreateIndex doesn't work
-        return createIndex.getURI().equals(INDEX);
+        return createIndex.getURI(ElasticsearchVersion.UNKNOWN).equals(INDEX);
       }
     };
   }
@@ -316,7 +317,7 @@ public class JestElasticsearchClientTest {
     JestElasticsearchClient client = new JestElasticsearchClient(jestClient);
     client.close();
 
-    verify(jestClient).shutdownClient();
+    try { verify(jestClient).close(); } catch (Exception e) {}
   }
 
   private BulkResult createBulkResultFailure(String exception) {

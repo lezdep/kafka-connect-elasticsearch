@@ -122,6 +122,8 @@ public class JestElasticsearchClient implements ElasticsearchClient {
           ElasticsearchSinkConnectorConfig.CONNECTION_TIMEOUT_MS_CONFIG);
       final int readTimeout = config.getInt(
           ElasticsearchSinkConnectorConfig.READ_TIMEOUT_MS_CONFIG);
+      final int maxTotalConnnection = config.getInt(
+          ElasticsearchSinkConnectorConfig.MAX_TOTAL_CONNECTIONS);
 
       final String username = config.getString(
           ElasticsearchSinkConnectorConfig.CONNECTION_USERNAME_CONFIG);
@@ -133,6 +135,7 @@ public class JestElasticsearchClient implements ElasticsearchClient {
       HttpClientConfig.Builder builder = new HttpClientConfig.Builder(address)
           .connTimeout(connTimeout)
           .readTimeout(readTimeout)
+          .maxTotalConnection(maxTotalConnnection)
           .multiThreaded(true);
       if (username != null && password != null) {
         builder.defaultCredentials(username, password.value())
@@ -364,6 +367,10 @@ public class JestElasticsearchClient implements ElasticsearchClient {
   }
 
   public void close() {
-    client.shutdownClient();
+    try {
+      client.close();
+    } catch (IOException e) {
+      throw new ConnectException("Cannot close client connection -- " + e.getMessage());
+    }
   }
 }

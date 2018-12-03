@@ -138,6 +138,15 @@ public class ElasticsearchSinkConnectorConfig extends AbstractConfig {
       + "if any read operation times out, and will need to be restarted to resume "
       + "further operations.";
 
+  public static final String MAX_TOTAL_CONNECTIONS = "max.total.connections";
+  private static final String MAX_TOTAL_CONNECTIONS_DOC = "Maximum connections to "
+          + "Elasticsearch server in Jest pool. Size of the connection pool in Jest client"
+          + "that controls how many simultaneous requests could be sent.";
+  public static final String MAX_CONNECTIONS_PER_ROUTE = "max.connections.per.route";
+  private static final String MAX_CONNECTIONS_PER_ROUTE_DOC = "Maximum connections per "
+          + "route to Elasticsearch server. Represents number of simultaneous requests "
+          + "a task could send.";
+
   public static final String BEHAVIOR_ON_NULL_VALUES_CONFIG = "behavior.on.null.values";
   private static final String BEHAVIOR_ON_NULL_VALUES_DOC = "How to handle records with a "
       + "non-null key and a null value (i.e. Kafka tombstone records). Valid options are "
@@ -258,8 +267,8 @@ public class ElasticsearchSinkConnectorConfig extends AbstractConfig {
         ++order,
         Width.SHORT,
         "Retry Backoff (ms)"
-      ).define(
-        CONNECTION_TIMEOUT_MS_CONFIG, 
+    ).define(
+        CONNECTION_TIMEOUT_MS_CONFIG,
         Type.INT, 
         1000, 
         Importance.LOW, 
@@ -268,7 +277,7 @@ public class ElasticsearchSinkConnectorConfig extends AbstractConfig {
         ++order, 
         Width.SHORT, 
         "Connection Timeout"
-        ).define(
+    ).define(
         READ_TIMEOUT_MS_CONFIG, 
         Type.INT, 
         3000, 
@@ -277,7 +286,27 @@ public class ElasticsearchSinkConnectorConfig extends AbstractConfig {
         group, 
         ++order, 
         Width.SHORT, 
-        "Read Timeout");
+        "Read Timeout"
+    ).define(
+        MAX_TOTAL_CONNECTIONS,
+        Type.INT,
+        10,
+        Importance.MEDIUM,
+        MAX_TOTAL_CONNECTIONS_DOC,
+        group,
+        ++order,
+        Width.SHORT,
+        "Max Total Client Requests"
+    ).define(
+        MAX_CONNECTIONS_PER_ROUTE,
+        Type.INT,
+        5,
+        Importance.MEDIUM,
+        MAX_CONNECTIONS_PER_ROUTE_DOC,
+        group,
+        ++order,
+        Width.SHORT,
+        "Max Client Requests Per Task");
   }
 
   private static void addConversionConfigs(ConfigDef configDef) {

@@ -54,6 +54,8 @@
         </repository>
     </repositories>
 
+<!-- test change for next repo -->
+
     <dependencies>
         <dependency>
             <groupId>org.apache.kafka</groupId>

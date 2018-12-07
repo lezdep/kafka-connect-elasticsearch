@@ -290,7 +290,7 @@ public class ElasticsearchSinkConnectorConfig extends AbstractConfig {
     ).define(
         MAX_TOTAL_CONNECTIONS,
         Type.INT,
-        10,
+        100,
         Importance.MEDIUM,
         MAX_TOTAL_CONNECTIONS_DOC,
         group,
@@ -300,7 +300,7 @@ public class ElasticsearchSinkConnectorConfig extends AbstractConfig {
     ).define(
         MAX_CONNECTIONS_PER_ROUTE,
         Type.INT,
-        5,
+        100,
         Importance.MEDIUM,
         MAX_CONNECTIONS_PER_ROUTE_DOC,
         group,

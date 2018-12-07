@@ -124,6 +124,8 @@ public class JestElasticsearchClient implements ElasticsearchClient {
           ElasticsearchSinkConnectorConfig.READ_TIMEOUT_MS_CONFIG);
       final int maxTotalConnnection = config.getInt(
           ElasticsearchSinkConnectorConfig.MAX_TOTAL_CONNECTIONS);
+      final int defaultMaxTotalConnectionPerRoute = config.getInt(
+          ElasticsearchSinkConnectorConfig.MAX_CONNECTIONS_PER_ROUTE);
 
       final String username = config.getString(
           ElasticsearchSinkConnectorConfig.CONNECTION_USERNAME_CONFIG);
@@ -136,6 +138,7 @@ public class JestElasticsearchClient implements ElasticsearchClient {
           .connTimeout(connTimeout)
           .readTimeout(readTimeout)
           .maxTotalConnection(maxTotalConnnection)
+          .defaultMaxTotalConnectionPerRoute(defaultMaxTotalConnectionPerRoute)
           .multiThreaded(true);
       if (username != null && password != null) {
         builder.defaultCredentials(username, password.value())
